@@ -12,7 +12,7 @@ function PublicServiceStatus() {
   useEffect(() => {
     const fetchServiceData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/services/public/${serviceId}/metrics`, {
+        const response = await axios.get(`http://ec2-3-83-184-204.compute-1.amazonaws.com:8080/api/services/public/${serviceId}/metrics`, {
           params: {
             startTime: '2024-10-27T00:00:00',
             endTime: '2024-10-27T23:59:59'

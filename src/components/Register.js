@@ -14,7 +14,7 @@ function Register() {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('http://localhost:8080/api/auth/register', {
+      await axios.post('http://ec2-3-83-184-204.compute-1.amazonaws.com:8080/api/auth/register', {
         username,
         password,
         organizationName,

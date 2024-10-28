@@ -15,7 +15,7 @@ function Login() {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', { username, password });
+      const response = await axios.post('http://ec2-3-83-184-204.compute-1.amazonaws.com:8080/api/auth/login', { username, password });
       if (response?.data) {
         localStorage.setItem('authToken', response.data.token);
         console.log('Token stored:', response.data.token); // Debug log
