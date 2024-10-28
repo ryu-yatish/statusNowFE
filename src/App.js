@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { jwtDecode } from 'jwt-decode';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
 
 import Header from './components/Header';
 import Home from './components/Home';
@@ -71,7 +72,7 @@ function App() {
             <Route path="/manage-service/:serviceId" element={<ServiceManagement />} />
           </Routes>
         </main>
-
+        <Toaster position="top-right" />
       </div>
     </Router>
     </AuthProvider>

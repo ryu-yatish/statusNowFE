@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/axios';  // Make sure this is your axios instance with interceptors
-import { Plus, Edit2, Trash2, ExternalLink } from 'lucide-react';
+import { Plus, Edit2, Trash2, ExternalLink, Share2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
 import ServiceModal from './ServiceModal';
+import { toast } from 'sonner'; // Make sure to install this package if not already installed
 
 function Dashboard() {
     const [services, setServices] = useState([]);
@@ -74,6 +75,18 @@ function Dashboard() {
         setFormData({ name: '', description: '', url: '', type: '' });
     };
 
+    const handleShare = (serviceId) => {
+        const publicUrl = `${window.location.origin}/service/${serviceId}`;
+        navigator.clipboard.writeText(publicUrl)
+            .then(() => {
+                toast.success('Public URL copied to clipboard');
+            })
+            .catch((error) => {
+                console.error('Failed to copy URL:', error);
+                toast.error('Failed to copy URL');
+            });
+    };
+
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-6">
@@ -98,6 +111,13 @@ function Dashboard() {
                                         <ExternalLink className="w-4 h-4" />
                                     </Button>
                                 </Link>
+                                <Button 
+                                    variant="ghost" 
+                                    size="sm"
+                                    onClick={() => handleShare(service.id)}
+                                >
+                                    <Share2 className="w-4 h-4" />
+                                </Button>
                             </div>
                             <p className="text-sm text-muted-foreground">{service.description}</p>
                             {service.url && (

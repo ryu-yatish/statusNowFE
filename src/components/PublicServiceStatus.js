@@ -12,10 +12,18 @@ function PublicServiceStatus() {
   useEffect(() => {
     const fetchServiceData = async () => {
       try {
+        const endTime = new Date();
+        const startTime = new Date(endTime - 24 * 60 * 60 * 1000); // 24 hours ago
+
+        // Format dates to YYYY-MM-DDTHH:mm:ss
+        const formatDate = (date) => {
+          return date.toISOString().split('.')[0]; // Removes milliseconds
+        };
+
         const response = await axios.get(`http://ec2-3-83-184-204.compute-1.amazonaws.com:8080/api/services/public/${serviceId}/metrics`, {
           params: {
-            startTime: '2024-10-27T00:00:00',
-            endTime: '2024-10-27T23:59:59'
+            startTime: formatDate(startTime),
+            endTime: formatDate(endTime)
           }
         });
         setServiceData(response.data);
@@ -43,6 +51,10 @@ function PublicServiceStatus() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">{serviceData.serviceName} Status</h1>
+      
+      <p className="text-sm text-muted-foreground mb-4">
+        Showing metrics for the past 24 hours
+      </p>
       
       <div className="bg-card rounded-lg p-6 mb-8 shadow-sm">
         <div className="flex items-center justify-between mb-4">
