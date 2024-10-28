@@ -75,16 +75,47 @@ function Dashboard() {
         setFormData({ name: '', description: '', url: '', type: '' });
     };
 
-    const handleShare = (serviceId) => {
+    const handleShare = async (serviceId) => {
         const publicUrl = `${window.location.origin}/service/${serviceId}`;
-        navigator.clipboard.writeText(publicUrl)
-            .then(() => {
-                toast.success('Public URL copied to clipboard');
-            })
-            .catch((error) => {
-                console.error('Failed to copy URL:', error);
-                toast.error('Failed to copy URL');
-            });
+        
+        if (navigator.clipboard && window.isSecureContext) {
+          // For HTTPS or localhost
+          try {
+            await navigator.clipboard.writeText(publicUrl);
+            toast.success('Public URL copied to clipboard');
+          } catch (error) {
+            console.error('Failed to copy URL:', error);
+            fallbackCopyToClipboard(publicUrl);
+          }
+        } else {
+          // Fallback for HTTP
+          fallbackCopyToClipboard(publicUrl);
+        }
+    };
+
+    const fallbackCopyToClipboard = (text) => {
+        try {
+          // Create temporary input element
+          const textArea = document.createElement('textarea');
+          textArea.value = text;
+          
+          // Make it invisible
+          textArea.style.position = 'fixed';
+          textArea.style.left = '-999999px';
+          textArea.style.top = '-999999px';
+          document.body.appendChild(textArea);
+          
+          // Select and copy
+          textArea.focus();
+          textArea.select();
+          document.execCommand('copy');
+          textArea.remove();
+          
+          toast.success('Public URL copied to clipboard');
+        } catch (error) {
+          console.error('Fallback copy failed:', error);
+          toast.error('Failed to copy URL. Please copy it manually: ' + text);
+        }
     };
 
     return (
